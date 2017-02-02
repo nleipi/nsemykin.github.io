@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Fixed on Just a whisper. I hear it in my ghost.</title>
+    <link>https://nsemykin.github.io/fixed/index.xml</link>
+    <description>Recent content in Fixed on Just a whisper. I hear it in my ghost.</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <lastBuildDate>Thu, 02 Feb 2017 15:30:30 +0100</lastBuildDate>
+    <atom:link href="https://nsemykin.github.io/fixed/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>About</title>
+      <link>https://nsemykin.github.io/about/</link>
+      <pubDate>Thu, 02 Feb 2017 15:30:30 +0100</pubDate>
+      
+      <guid>https://nsemykin.github.io/about/</guid>
+      <description>&lt;p&gt;Hi, i&amp;rsquo;m Nikolay. I do programming :-P&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
