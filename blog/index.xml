@@ -2,12 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Blog on Just a whisper. I hear it in my ghost.</title>
-    <link>https://nsemykin.github.io/blog/index.xml</link>
+    <link>https://nsemykin.github.io/blog/</link>
     <description>Recent content in Blog on Just a whisper. I hear it in my ghost.</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Fri, 24 Mar 2017 22:59:17 +0100</lastBuildDate>
-    <atom:link href="https://nsemykin.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 22 May 2017 20:40:30 +0200</lastBuildDate>
+    
+	<atom:link href="https://nsemykin.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Sensible Testing</title>
+      <link>https://nsemykin.github.io/blog/sensible-testing/</link>
+      <pubDate>Mon, 22 May 2017 20:40:30 +0200</pubDate>
+      
+      <guid>https://nsemykin.github.io/blog/sensible-testing/</guid>
+      <description>Although the concepts of software testing were around for decades, the interest among developers started to grow only in past few years. Unfortunately, there is no definitive guide how to test, instead there are as many opinions on this topic as there are developers. In this post i&amp;rsquo;d like to share my thoughts about the benefits of different kind of tests.
+The kind of tests i&amp;rsquo;d like to talk about are unit tests, integration tests and system tests.</description>
+    </item>
     
     <item>
       <title>Client Is King</title>
@@ -15,155 +27,7 @@
       <pubDate>Fri, 24 Mar 2017 22:59:17 +0100</pubDate>
       
       <guid>https://nsemykin.github.io/blog/client-is-king/</guid>
-      <description>&lt;p&gt;Over past few years I developed a technique of designing interfaces. At the time I took note of this approach I was already using it for quite a while. It kind of became my standard way of solving some problems as it has proven to be useful. I call this technique &amp;ldquo;client is king&amp;rdquo;. It is seemingly trivial and is more a way of thinking than some smart design pattern.&lt;/p&gt;
-
-&lt;p&gt;While designing classes in your application it is inevitable that some methods will accept objects as arguments. The goal of doing so is to call some method on this object or to use its accessors (which i prefer not to do, but i probably will write about it someday later).&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public class Client {
-
-  private ApplicationLevelService service;
-
-  public Client(ApplicationLevelService service) {
-    this.service = service;
-  }
-
-  public void someMethod() {
-    // some logic here
-    service.doStuff();
-    // or
-    service.processData(data);
-    // or
-    List result = service.find(options);
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now, usually &lt;code&gt;service&lt;/code&gt; would be some existing type with more methods than just &lt;code&gt;doStuff&lt;/code&gt;. It creates tight coupling between client and service. The client will only be usable with the service, which most probably will lead to infamous gorilla banana problem. Even if the type is an interface and not a class the coupling will be still there, right in your head. That means as you plan your client you will probably tend to build it around the existing service. If you practice TDD (test first) mocking the service will divert your attention from the actual functionality of the client, and some services might be very difficult to mock. As you hopefully can see, there are quite a few issues.&lt;/p&gt;
-
-&lt;p&gt;Imagine you would not use existing type, but instead create new one that only will satisfy the needs of your client in the most convenient way. It&amp;rsquo;s like the world around the client does only exist to serve it&amp;rsquo;s needs. This approach not only does fix the problems I described, but also allows you to do some other neat stuff.
-Doing TDD will be way easier, as you can focus on functionality of the client only. The service will be easy to mock even without any mocking libraries. Also the service will describe the API of client and make it more understandable to other developers.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public class Client {
-  private MyService service;
-
-  public Client(MyService service) {
-    this.service = service;
-  }
-
-  public void someMethod() {
-    // some logic here
-    service.clientDidSomething();
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Probably you will notice the MyService in the example above looks like Observer Pattern. Some popular design patterns like Observer or Strategy already will force you to design their interface from client&amp;rsquo;s point of view.&lt;/p&gt;
-
-&lt;p&gt;So what other are the other benefits? Imagine this example:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public class Client {
-  private RequestManager requestManager;
-
-  public Client(RequestManager requestManager) {
-    this.requestManager = requestManager;
-  }
-
-  public void someMethod() {
-    // some logic here
-    requestManager.sendRequest(new Request(Config.SOME_URL, data));
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;There are several problems I see here. First, RequestManager will probably have broad API that is hard to mock. You need to know the implementation of Client to know that the Client only uses &lt;code&gt;sendRequest&lt;/code&gt;. Second, the url is hardcoded, which means you will never be able to reuse the Client with other url. A quick solution could be to set the url through the constructor or some setter method. Third, i see Single Responsibility principle violated here. The client will change if the logic changes or if the request changes. So, how will &amp;ldquo;client is kind&amp;rdquo; fix all that?&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public class Client {
-  private ClientResultHandler resultHandler;
-
-  public Client(ClientResultHandler resultHandler) {
-    this.resultHandler = resultHandler;
-  }
-
-  public void someMethod() {
-    // some logic here
-    resultHandler.processData(data);
-  }
-}
-
-public class RequestResultHandler implements ClientResultHandler {
-  private RequestManager requestManager;
-  private String url;
-
-  public RequestResultHandler(RequestManager requestManager, String url) {
-    this.requestManager = requestManager;
-    this.url = url;
-  }
-
-  public void processData(ClientData data) {
-    requestManager.sendRequest(new Request(url, data));
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;As you see ClientResultHandler is a type defined solely for Client&amp;rsquo;s needs. The Client has no dependencies on whatsoever application level types anymore. Mocking of the handler will be trivial. What happens to the data calculated in &lt;code&gt;someMethod&lt;/code&gt; is not the responsibility of the client anymore. If you will need to do some additional logging before sending the request you won&amp;rsquo;t need to change Client nor RequestResultHandler. All you do is implementing new bit of logic in a new class.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public class LoggingResultHandler implements ClientResultHandler {
-  private Logger logger;
-  private ClientResultHandler nextHandler;
-
-  public LoggingResultHandler(Logger logger, ClientResultHandler nextHandler) {
-    this.logger = logger;
-    this.nextHandler = nextHandler;
-  }
-
-  public void processData(ClientData data) {
-    logger.log(data);
-    nextHandler.processData(data);
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Nothing changes in the existing code except the instantiation of the Client.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;ClientResultHandler handler = new LoggingResultHandler(
-  logger,
-  new RequestResultHandler(
-    requestManager,
-    url
-  )
-);
-Client client = new Client(handler);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Let&amp;rsquo;s add some test too.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-java&#34;&gt;public void testClient() {
-  MockHandler handler = new MockHandler();
-  Client client = new Client(handler);
-
-  client.doSomething();
-
-  assertTrue(handler.validate());
-}
-
-public class MockHandler implements ClientResultHandler {
-
-  private ClientData data;
-
-  public void processData(ClientData data) {
-    this.data = data;
-  }
-
-  public boolean validate() {
-    // check if data looks like expected.
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For the sake of the article i did the test at the very end, but usually i would begin with the test and use it as my playground to carve out Client&amp;rsquo;s API.&lt;/p&gt;
-
-&lt;p&gt;So, this is it. Not very impressive, not a rocket science and not magic, but battle-tried technique, which will allow you to write sustainable code.&lt;/p&gt;
-</description>
+      <description>Over past few years I developed a technique of designing interfaces. At the time I took note of this approach I was already using it for quite a while. It kind of became my standard way of solving some problems as it has proven to be useful. I call this technique &amp;ldquo;client is king&amp;rdquo;. It is seemingly trivial and is more a way of thinking than some smart design pattern.</description>
     </item>
     
     <item>
@@ -172,10 +36,7 @@ public class MockHandler implements ClientResultHandler {
       <pubDate>Thu, 02 Feb 2017 15:14:55 +0100</pubDate>
       
       <guid>https://nsemykin.github.io/blog/opening/</guid>
-      <description>&lt;blockquote&gt;
-&lt;p&gt;Ladies and gentlemen, much of what you&amp;rsquo;ve seen may be termed as illusions or entertaining trifles. Alas&amp;hellip;I cannot claim this next feat as illusion. Watch carefully. You will see no trickery, for no trickery is employed. Merely a technique familiar to certain citizens of the Orient and various holy men of the Himalayas. Indeed, many of you may be familiar with this technique, but for those of you who are not, do not be alarmed. What you&amp;rsquo;re about to see is considered safe.&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
+      <description>Ladies and gentlemen, much of what you&amp;rsquo;ve seen may be termed as illusions or entertaining trifles. Alas&amp;hellip;I cannot claim this next feat as illusion. Watch carefully. You will see no trickery, for no trickery is employed. Merely a technique familiar to certain citizens of the Orient and various holy men of the Himalayas. Indeed, many of you may be familiar with this technique, but for those of you who are not, do not be alarmed.</description>
     </item>
     
   </channel>

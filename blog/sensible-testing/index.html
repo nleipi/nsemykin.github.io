@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="Just my thought about programming and programmers">
+
+<base href="https://nsemykin.github.io/">
+<title>
+
+
+     Sensible Testing 
+
+</title>
+<link rel="canonical" href="https://nsemykin.github.io/blog/sensible-testing/">
+
+
+<script type="text/javascript">
+    var baseURL = 'https:\/\/nsemykin.github.io\/';
+    var host = baseURL.substring(0, baseURL.length - 1).replace(/\//g, '');
+    if ((host === window.location.host) && (window.location.protocol !== 'https:')) {
+        window.location.protocol = 'https:';
+    }
+</script>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Ubuntu+Mono:400,400i,700,700i|Raleway:500">
+
+
+
+    <link rel="stylesheet" href="https://nsemykin.github.io/css/reset.css">
+    <link rel="stylesheet" href="https://nsemykin.github.io/css/pygments.css">
+    <link rel="stylesheet" href="https://nsemykin.github.io/css/main.css">
+    
+        <link rel="stylesheet" href="https://nsemykin.github.io/css/override.css">
+    
+
+
+
+
+<link rel="shortcut icon"
+
+    href="https://nsemykin.github.io/img/leaf.ico"
+
+>
+
+
+
+
+
+
+</head>
+
+
+<body lang="en">
+
+<section class="header">
+    <div class="container">
+        <div class="content">
+            
+              <a href="https://nsemykin.github.io/"><img class="avatar" src="https://nsemykin.github.io/img/profile.png" /></a>
+            
+            <a href="https://nsemykin.github.io/"><div class="name">Nikolay Semykin</div></a>
+            
+            
+            <nav>
+                <ul>
+                    
+                        <a href="https://nsemykin.github.io/blog/"><li>blog</li></a>
+                    
+                        <a href="https://nsemykin.github.io/about/"><li>about</li></a>
+                    
+                </ul>
+            </nav>
+            
+        </div>
+    </div>
+</section>
+
+<section class="icons">
+    <div class="container">
+        <div class="content">
+
+        
+            <a href="//github.com/nsemykin" target="_blank"><img class="icon" src="https://nsemykin.github.io/img/github.svg" alt="github" /></a>
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+            <a href="https://nsemykin.github.io/index.xml"><img class="icon" src="https://nsemykin.github.io/img/rss.svg" alt="rss" /></a>
+        
+        </div>
+    </div>
+</section>
+
+
+<section class="main post non-narrow zero-top-spacing">
+    <div class="container">
+        <div class="content">
+            <div class="front-matter">
+                <div class="title-container">
+                    <div class="page-heading">
+
+    Sensible Testing
+
+</div>
+
+                    <div class="initials"><a href="https://nsemykin.github.io/"></a></div>
+                </div>
+                <div class="meta">
+                    <div class="date" title="Mon May 22 2017 20:40:30 CEST">May 22, 2017</div>
+                    <div class="reading-time"><div class="middot"></div>4 minutes read</div>
+                </div>
+            </div>
+            <div class="markdown">
+                
+
+<p>Although the concepts of software testing were around for decades,
+the interest among developers started to grow only in past few years.
+Unfortunately, there is no definitive guide how to test,
+instead there are as many opinions on this topic as there are developers.
+In this post i&rsquo;d like to share my thoughts about the benefits of different kind of tests.</p>
+
+<p>The kind of tests i&rsquo;d like to talk about are unit tests, integration tests and system tests.
+I will tell what I think they are and when to use them or not.
+How to implement the tests and what exactly to test is not part of this post.</p>
+
+<h2 id="unit-tests">Unit Tests</h2>
+
+<p>Unit tests test small pieces of code in isolation.
+The smallest testable unit in OOP world is usually a method.
+To achieve the isolation every dependency of the tested unit should be mocked,
+i.e. the only production code in the whole test is the one that&rsquo;s being tested.
+The purpose of the other code is to create conditions,
+which should lead to desired behavior of the unit.
+The key concepts of unit tests are fast execution and simple setup.
+Unit tests do not only prove that your unit works as expected,
+but also warn the developers if it doesn&rsquo;t anymore after later changes.</p>
+
+<p>As the unit tests are located at the very bottom of the test stack one might ask,
+why should I write dozens of unit tests if one or two system tests will cover the same functionality.
+The answer is fast execution.
+While tests on higher level might find a bug as well,
+they usually require full, or at least partial, start of the application.
+Another benefit that only unit tests provide is documentation of the code.
+Depending on how clean the tests are, every developer will be able to see what the unit is supposed to do.</p>
+
+<p>My advice- you should never skip unit tests.</p>
+
+<h2 id="integration-tests">Integration Tests</h2>
+
+<p>You can find tons of information about integration tests on the internet except everything you actually want to know.
+There are thousands of articles explaining big bang, top down and bottom up approaches,
+and even discussions which approach is the best.
+But no one really explains how to get started.
+So what actually integration tests boil down to is unit tests without mocks.
+Well not completely without mocks, but at least first level dependencies should be production code.</p>
+
+<p>While integration test <strong>are</strong> unit tests, they do not have any of their advantages.
+They are slow in the best case.
+The setup is much more complicated.
+In most applications the benefit of integration tests will be small,
+but they will significantly slow down the development and can even demotivate the team, if not used carefully.
+Also the documentation purpose is no longer valid for them.
+On top of it, system tests will cover integration of modules as well and they are even cheaper to read,
+write and execute.
+However there are cases when integration tests are sensible.
+For instance, they are useful in development of libraries and frameworks,
+where it is crucial that every unit is working well with every other possible unit.</p>
+
+<p>My advice- don&rsquo;t do integration tests unless you absolutely need them.</p>
+
+<h2 id="system-tests">System Tests</h2>
+
+<p>This kind of tests will test your whole system as a black box.
+They don&rsquo;t test units, but rather complete scenarios.
+For example, if your application is a REST service, then system tests will send requests and validate the responses.
+Just as unit tests, the system tests serve as documentation, so writing them as clean as you can is worth the effort.
+Single system test should be able to run repeatedly without restarting the application.
+That way it is possible to use them for TDD efficiently, especially if the platform is capable of hot swap.</p>
+
+<p>My advice- It is usually a good idea to have system tests.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Unit and system tests can greatly speed up the development of applications, when used properly.
+Integration tests will probably slow down the development,
+but only this kind of tests is able to test interaction between components in systems,
+that will be configured by users, e.g. libraries or frameworks.</p>
+
+                <br>
+                <p><a href="https://nsemykin.github.io/blog/">Back to posts</a></p>
+            </div>
+            <br>
+            <div class="disqus">
+                <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'nsemykin';
+    var disqus_identifier = 'https:\/\/nsemykin.github.io\/blog\/sensible-testing\/';
+    var disqus_title = 'Sensible Testing';
+    var disqus_url = 'https:\/\/nsemykin.github.io\/blog\/sensible-testing\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+</body>
+</html>
+

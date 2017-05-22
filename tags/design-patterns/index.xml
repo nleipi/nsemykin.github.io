@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Design Patterns on Just a whisper. I hear it in my ghost.</title>
+    <link>https://nsemykin.github.io/tags/design-patterns/</link>
+    <description>Recent content in Design Patterns on Just a whisper. I hear it in my ghost.</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-US</language>
+    <lastBuildDate>Fri, 24 Mar 2017 22:59:17 +0100</lastBuildDate>
+    
+	<atom:link href="https://nsemykin.github.io/tags/design-patterns/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Client Is King</title>
+      <link>https://nsemykin.github.io/blog/client-is-king/</link>
+      <pubDate>Fri, 24 Mar 2017 22:59:17 +0100</pubDate>
+      
+      <guid>https://nsemykin.github.io/blog/client-is-king/</guid>
+      <description>Over past few years I developed a technique of designing interfaces. At the time I took note of this approach I was already using it for quite a while. It kind of became my standard way of solving some problems as it has proven to be useful. I call this technique &amp;ldquo;client is king&amp;rdquo;. It is seemingly trivial and is more a way of thinking than some smart design pattern.</description>
+    </item>
+    
+  </channel>
+</rss>
