@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="Just my thought about programming and programmers">
+
+<base href="https://nsemykin.github.io/">
+<title>
+
+
+     Let&#39;s TDD! 
+
+</title>
+<link rel="canonical" href="https://nsemykin.github.io/blog/lets-tdd/">
+
+
+<script type="text/javascript">
+    var baseURL = 'https:\/\/nsemykin.github.io\/';
+    var host = baseURL.substring(0, baseURL.length - 1).replace(/\//g, '');
+    if ((host === window.location.host) && (window.location.protocol !== 'https:')) {
+        window.location.protocol = 'https:';
+    }
+</script>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Ubuntu+Mono:400,400i,700,700i|Raleway:500">
+
+
+
+    <link rel="stylesheet" href="https://nsemykin.github.io/css/reset.css">
+    <link rel="stylesheet" href="https://nsemykin.github.io/css/pygments.css">
+    <link rel="stylesheet" href="https://nsemykin.github.io/css/main.css">
+    
+        <link rel="stylesheet" href="https://nsemykin.github.io/css/override.css">
+    
+
+
+
+
+<link rel="shortcut icon"
+
+    href="https://nsemykin.github.io/img/leaf.ico"
+
+>
+
+
+
+
+
+
+</head>
+
+
+<body lang="en">
+
+<section class="header">
+    <div class="container">
+        <div class="content">
+            
+              <a href="https://nsemykin.github.io/"><img class="avatar" src="https://nsemykin.github.io/img/profile.png" /></a>
+            
+            <a href="https://nsemykin.github.io/"><div class="name">Nikolay Semykin</div></a>
+            
+            
+            <nav>
+                <ul>
+                    
+                        <a href="https://nsemykin.github.io/blog/"><li>blog</li></a>
+                    
+                        <a href="https://nsemykin.github.io/about/"><li>about</li></a>
+                    
+                </ul>
+            </nav>
+            
+        </div>
+    </div>
+</section>
+
+<section class="icons">
+    <div class="container">
+        <div class="content">
+
+        
+            <a href="//github.com/nsemykin" target="_blank"><img class="icon" src="https://nsemykin.github.io/img/github.svg" alt="github" /></a>
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+            <a href="https://nsemykin.github.io/index.xml"><img class="icon" src="https://nsemykin.github.io/img/rss.svg" alt="rss" /></a>
+        
+        </div>
+    </div>
+</section>
+
+
+<section class="main post non-narrow zero-top-spacing">
+    <div class="container">
+        <div class="content">
+            <div class="front-matter">
+                <div class="title-container">
+                    <div class="page-heading">
+
+    Let&#39;s TDD!
+
+</div>
+
+                    <div class="initials"><a href="https://nsemykin.github.io/"></a></div>
+                </div>
+                <div class="meta">
+                    <div class="date" title="Thu Jun 8 2017 08:05:34 CEST">Jun 8, 2017</div>
+                    <div class="reading-time"><div class="middot"></div>6 minutes read</div>
+                </div>
+            </div>
+            <div class="markdown">
+                
+
+<p>When I tried TDD the very first time I failed miserably.
+Of course I thought it was not my fault but TDD&rsquo;s,
+because it is just some theory invented by some professor with no hands-on experience.
+I though TDD doesn&rsquo;t work in the <strong>real</strong> world.
+It certainly will sound familiar to some of you.
+This day TDD works out kinda well for me, so I&rsquo;d like to show you how I do it.
+Now, let&rsquo;s stop beating around the bush and get the hands dirty.</p>
+
+<p>I&rsquo;d like to implement a simplified version of the class every Flash developer is familiar with: EventDispatcher.
+It is a quite easy exercise, but it has some pitfalls when doing it TDD way.</p>
+
+<p>Let&rsquo;s start with simple function which will be our test.
+That&rsquo;s right. Just a function.
+There is no need of fancy frameworks to write tests, but they will make it easier once you know what you are doing.</p>
+
+<pre><code class="language-javascript">function testDispatchEvent() { // this function is our test
+  console.log(result === event) // we know that our final goal is to receive event, but we don't know how yet.
+}
+testDispatchEvent() // run the test
+</code></pre>
+
+<p>In order to run this test you can copy and paste it into console of your browser,
+or use snippet feature the most modern browsers have.
+Once we run the code, browser will tell us that <code>result</code> and <code>event</code> are not defined.
+Let&rsquo;s fix that.</p>
+
+<pre><code class="language-javascript">function testDispatchEvent() {
+  var event = {} // declare event
+  var result; // and result, but don't know where it comes from
+  console.log(result === event);
+}
+testDispatchEvent()
+</code></pre>
+
+<p>When we run the test this time we will see <code>false</code>.
+Our test fails, which is great.
+We now can think about the API of the <code>EventDispatcher</code>.</p>
+
+<pre><code class="language-javascript">function testDispatchEvent() {
+  var event = {}
+  var result;
+  eventDispatcher.dispatchEvent(event); // this is how I imagine the usage of the class
+  console.log(result === event);
+}
+testDispatchEvent()
+</code></pre>
+
+<p>Does the method feel good? It does to me.
+But when you run it, browser will complain that <code>eventDispatcher</code> in not defined.
+We need to instantiate it.
+Because I don&rsquo;t want to dive into million ways of writing classes in JavaScript,
+I&rsquo;ll just use function that returns object.</p>
+
+<pre><code class="language-javascript">function createEventDispatcher() { // this is our constructor
+  return {} // this is instance of EventDispatcher
+}
+
+function testDispatchEvent() {
+  var event = {}
+  var result;
+  var eventDispatcher = createEventDispatcher() // kinda same as new EventDispatcher()
+  eventDispatcher.dispatchEvent(event)
+}
+testDispatchEvent()
+</code></pre>
+
+<p>Once we run it we will see that <code>dispatchEvent</code> is not a function.
+We should just declare it.</p>
+
+<pre><code class="language-javascript">function createEventDispatcher() {
+  return {
+    dispatchEvent: function(event) {
+    }
+  }
+}
+
+function testDispatchEvent() {
+  var event = {}
+  var result;
+  var eventDispatcher = createEventDispatcher()
+  eventDispatcher.dispatchEvent(event)
+  console.log(result === event)
+}
+testDispatchEvent()
+</code></pre>
+
+<p>The test will fail again.
+It&rsquo;s time to think how <code>dispatchEvent</code> can assign <code>event</code> to <code>result</code>.
+I&rsquo;ve got an idea: callback!</p>
+
+<pre><code class="language-javascript">function createEventDispatcher() {
+  var listener;
+  return {
+    dispatchEvent: function(event) {
+      listener(event);
+    }
+  }
+}
+
+function testDispatchEvent() {
+  var event = {}
+  var result;
+  var eventDispatcher = createEventDispatcher()
+  eventDispatcher.dispatchEvent(event)
+  console.log(result === event)
+}
+testDispatchEvent()
+</code></pre>
+
+<p>Run it and see that <code>listener</code> is not a function.
+We need to assign it somehow.</p>
+
+<pre><code class="language-javascript">function createEventDispatcher() {
+  var listener;
+  return {
+    dispatchEvent: function(event) {
+      listener(event)
+    }
+  }
+}
+
+function testDispatchEvent() {
+  var event = {}
+  var result;
+  var eventDispatcher = createEventDispatcher()
+  eventDispatcher.addEventListener(function(evt) { // we want to trigger this callback on `dispatchEvent`
+    result = evt
+  });
+  eventDispatcher.dispatchEvent(event)
+  console.log(result === event)
+}
+testDispatchEvent()
+</code></pre>
+
+<p>Of course the implementation of <code>addEventListener</code> is missing.</p>
+
+<pre><code class="language-javascript">function createEventDispatcher() {
+  var listener;
+  return {
+    dispatchEvent: function(event) {
+      listener(event)
+    },
+    addEventListener: function (callback) {
+      listener = callback
+    }
+  }
+}
+
+function testDispatchEvent() {
+  var event = {}
+  var result;
+  var eventDispatcher = createEventDispatcher()
+  eventDispatcher.addEventListener(function(evt) {
+    result = evt
+  });
+  eventDispatcher.dispatchEvent(event)
+  console.log(result === event)
+}
+testDispatchEvent()
+</code></pre>
+
+<p>Run it and guess what? It succeeds!
+At this point, if <code>testDispatchEvent</code> would cover every requirement, we are done!
+I am not to testing a case when <code>listener</code> is <code>null</code> or <code>undefined</code>,
+unless there should be actual code handling this case.
+But maybe it is a good idea to check validity of <code>callback</code> parameter.
+Before we change any code in the <code>EventDispatcher</code> we will set up a new test.</p>
+
+<pre><code class="language-javascript">function createEventDispatcher() {
+  var listener;
+  return {
+    dispatchEvent: function(event) {
+      listener(event)
+    },
+    addEventListener: function (callback) {
+      listener = callback
+    }
+  }
+}
+
+function testDispatchEvent() {
+  var event = {}
+  var result;
+  var eventDispatcher = createEventDispatcher()
+  eventDispatcher.addEventListener(function(evt) {
+    result = evt
+  });
+  eventDispatcher.dispatchEvent(event)
+  console.log(result === event)
+}
+testDispatchEvent()
+
+function testInvalidCallback() {
+  console.log(typeof error !== 'undefined') // to get the error is what we want
+}
+testInvalidCallback()
+</code></pre>
+
+<p>Again, we try to think of a success condition first.
+In this case the test should catch an error.
+If we run it however, the console will show <code>false</code> as now error was thrown.
+In the next step we extend the test with the code we expect to throw the error.</p>
+
+<pre><code class="language-javascript">function createEventDispatcher() {
+  var listener;
+  return {
+    dispatchEvent: function(event) {
+      listener(event)
+    },
+    addEventListener: function (callback) {
+      listener = callback
+    }
+  }
+}
+
+function testDispatchEvent() {
+  var event = {}
+  var result;
+  var eventDispatcher = createEventDispatcher()
+  eventDispatcher.addEventListener(function(evt) {
+    result = evt
+  });
+  eventDispatcher.dispatchEvent(event)
+  console.log(result === event)
+}
+testDispatchEvent()
+
+function testInvalidCallback() {
+  var error;
+  var eventDispatcher = createEventDispatcher()
+  try {
+    eventDispatcher.addEventListener(null)
+  } catch (err) {
+    error = err
+  }
+  console.log(typeof error !== 'undefined')
+}
+testInvalidCallback()
+</code></pre>
+
+<p>The test is runnable, but will fail again.
+The reason is that <code>addEventListener</code> didn&rsquo;t throw an error.</p>
+
+<pre><code class="language-javascript">function createEventDispatcher() {
+  var listener;
+  return {
+    dispatchEvent: function(event) {
+      listener(event)
+    },
+    addEventListener: function (callback) {
+      if (typeof callback !== 'function') {
+        throw new Error('Callback is not a function')
+      }
+      listener = callback
+    }
+  }
+}
+
+function testDispatchEvent() {
+  var event = {}
+  var result;
+  var eventDispatcher = createEventDispatcher()
+  eventDispatcher.addEventListener(function(evt) {
+    result = evt
+  });
+  eventDispatcher.dispatchEvent(event)
+  console.log(result === event)
+}
+testDispatchEvent()
+
+function testInvalidCallback() {
+  var error;
+  var eventDispatcher = createEventDispatcher()
+  try {
+    eventDispatcher.addEventListener(null)
+  } catch (err) {
+    error = err
+  }
+  console.log(typeof error !== 'undefined')
+}
+testInvalidCallback()
+</code></pre>
+
+<p>Done! Both tests pass.
+They describe the intended behavior of the <code>EventDispatcher</code> in a way,
+that even if you&rsquo;d lose the implementation of the <code>EventDispatcher</code> somehow,
+you will be able the reimplement the same thing just using the test.</p>
+
+<h2 id="about-the-pitfalls">About the pitfalls</h2>
+
+<p>When I started doing TDD I did a huge mistake.
+I tried to test the implementation and not the desired behavior.
+For example, I&rsquo;d check if <code>listener</code> was actually set after calling <code>addEventListener</code>.
+I made a lot implementation details public instead of private in order to be able to verify them.
+That lead to unmaintainable test <strong>and</strong> production code.
+So, try to keep you implementation details hidden even for the tests!</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Of course, my example is rather trivial.
+But I hope it could demystify TDD a little bit, since it is sure not easy thing to do,
+but it is far from being some kind of magic.</p>
+
+                <br>
+                <p><a href="https://nsemykin.github.io/blog/">Back to posts</a></p>
+            </div>
+            <br>
+            <div class="disqus">
+                <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'nsemykin';
+    var disqus_identifier = 'https:\/\/nsemykin.github.io\/blog\/lets-tdd\/';
+    var disqus_title = 'Let\x27s TDD!';
+    var disqus_url = 'https:\/\/nsemykin.github.io\/blog\/lets-tdd\/';
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+</body>
+</html>
+
