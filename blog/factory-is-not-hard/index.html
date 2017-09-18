@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="Just my thought about programming and programmers">
+
+<base href="https://nsemykin.github.io/">
+<title>
+
+
+     Factory is not hard 
+
+</title>
+<link rel="canonical" href="https://nsemykin.github.io/blog/factory-is-not-hard/">
+
+
+<script type="text/javascript">
+    var baseURL = 'https:\/\/nsemykin.github.io\/';
+    var host = baseURL.substring(0, baseURL.length - 1).replace(/\//g, '');
+    if ((host === window.location.host) && (window.location.protocol !== 'https:')) {
+        window.location.protocol = 'https:';
+    }
+</script>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Ubuntu+Mono:400,400i,700,700i|Raleway:500">
+
+
+
+    <link rel="stylesheet" href="https://nsemykin.github.io/css/reset.css">
+    <link rel="stylesheet" href="https://nsemykin.github.io/css/pygments.css">
+    <link rel="stylesheet" href="https://nsemykin.github.io/css/main.css">
+    
+        <link rel="stylesheet" href="https://nsemykin.github.io/css/override.css">
+    
+
+
+
+
+<link rel="shortcut icon"
+
+    href="https://nsemykin.github.io/img/leaf.ico"
+
+>
+
+
+
+
+
+
+</head>
+
+
+<body lang="en">
+
+<section class="header">
+    <div class="container">
+        <div class="content">
+            
+              <a href="https://nsemykin.github.io/"><img class="avatar" src="https://nsemykin.github.io/img/profile.png" /></a>
+            
+            <a href="https://nsemykin.github.io/"><div class="name">Nikolay Semykin</div></a>
+            
+            
+            <nav>
+                <ul>
+                    
+                        <a href="https://nsemykin.github.io/blog/"><li>blog</li></a>
+                    
+                        <a href="https://nsemykin.github.io/about/"><li>about</li></a>
+                    
+                </ul>
+            </nav>
+            
+        </div>
+    </div>
+</section>
+
+<section class="icons">
+    <div class="container">
+        <div class="content">
+
+        
+            <a href="//github.com/nsemykin" target="_blank"><img class="icon" src="https://nsemykin.github.io/img/github.svg" alt="github" /></a>
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+            <a href="https://nsemykin.github.io/index.xml"><img class="icon" src="https://nsemykin.github.io/img/rss.svg" alt="rss" /></a>
+        
+        </div>
+    </div>
+</section>
+
+
+<section class="main post non-narrow zero-top-spacing">
+    <div class="container">
+        <div class="content">
+            <div class="front-matter">
+                <div class="title-container">
+                    <div class="page-heading">
+
+    Factory is not hard
+
+</div>
+
+                    <div class="initials"><a href="https://nsemykin.github.io/"></a></div>
+                </div>
+                <div class="meta">
+                    <div class="date" title="Mon Sep 11 2017 17:01:23 CEST">Sep 11, 2017</div>
+                    <div class="reading-time"><div class="middot"></div>5 minutes read</div>
+                </div>
+            </div>
+            <div class="markdown">
+                <p>I read dozens of articles, posts and tutorials about the Factory Pattern, and now i know exactly what topping belongs on chicago style pizza.
+However, the purpose of Factory Pattern is not baking pizzas, or producing shapes, or making sandwiches.
+Nor is the Factory some fancy approach to impress your peers.
+I&rsquo;d like to tell you my understanding what Factory is about.</p>
+
+<blockquote>
+<p>Factory Pattern is an approach to extract &ldquo;new&rdquo; from your code and put it somewhere else.</p>
+</blockquote>
+
+<p>This is it!</p>
+
+<p>When should you user Factory?
+Many tutorials create an impression that there are only few situations where Factory is applicable.
+E.g when you have multiple classes that share common interface, like <code>IShape</code>, and you need to instantiate them.
+However, there are only few situations where it does <strong>not</strong> make sense to use Factory.
+Actually, it is virtually impossible to write a modular code without Factories.</p>
+
+<p>Let&rsquo;s have a look at some code.</p>
+
+<pre><code class="language-javascript">function createObjectA (factory) {
+  return {
+    methodA: function () {
+      var obj = factory.create()
+      obj.methodB()
+    }
+  }
+}
+
+function createObjectB () {
+  return {
+    methodB: function () {
+      console.log('Hello, World!')
+    }
+  }
+}
+
+function createFactory () {
+  return {
+    create: function () {
+      return createObjectB()
+    }
+  }
+}
+
+var factory = createFactory()
+var bo = createObjectA(factory)
+bo.methodA()
+</code></pre>
+
+<p>(<code>factory</code> could be function, but it might look like you only could use functions as factories)</p>
+
+<p>Now, it looks like it would be much easier to instantiate <code>ObjectB</code> directly in the <code>methodA</code> without using a factory.</p>
+
+<pre><code class="language-javascript">function createObjectA () {
+  return {
+    methodA: function () {
+      var obj = createObjectB()
+      obj.methodB()
+    }
+  }
+}
+
+function createObjectB () {
+  return {
+    methodB: function () {
+      console.log('Hello, World!')
+    }
+  }
+}
+
+var bo = createObjectA()
+bo.methodA()
+</code></pre>
+
+<p>But it comes with some disadvantages.</p>
+
+<p>First, you are not able to test if <code>methodA</code> actually instantiates ObjectB, or if methodB was called.
+You cannot replace <code>createObjectB</code> (you can read it as <code>new ObjectB()</code>) with mock because it is global state.
+Factory makes it easy-peasy.
+Just create a Factory that will return a mock instead of actual implementation of <code>ObjectB</code>.</p>
+
+<pre><code class="language-javascript">function createObjectA () {
+  return {
+    methodA: function () {
+    var obj = factory.create()
+      obj.methodB()
+    }
+  }
+}
+
+function createObjectBMock () {
+  var success = false
+  return {
+    methodB: function () {
+      success = true
+    },
+    isSuccessful: function () {
+      return success
+    }
+  }
+}
+
+function createFactory (mock) {
+  return {
+    create: function () {
+      return mock
+    }
+  }
+}
+
+var mock = createObjectBMock()
+var factory = createFactory(mock)
+var bo = createObjectA(factory)
+bo.methodA()
+console.log(mock.isSuccessful())
+</code></pre>
+
+<p>Second, adding dependencies to <code>ObjectB</code> will force you to change <code>ObjectA</code> as well.</p>
+
+<pre><code class="language-javascript">function createObjectA (objectC) {
+  return {
+    methodA: function () {
+      var obj = createObjectB(objectC)
+      obj.methodB()
+    }
+  }
+}
+
+function createObjectB (objectC) {
+  return {
+    methodB: function () {
+      console.log('Hello, ' + objectC.message)
+    }
+  }
+}
+
+function createObjectC () {
+  return {
+    message: 'World!'
+  }
+}
+
+var objectC = createObjectC()
+var bo = createObjectA(objectC)
+bo.methodA()
+</code></pre>
+
+<p>Do you see it?
+<code>ObjectA</code> does not need to know about <code>Object</code>C, but the instantiation of <code>ObjectB</code> requires an instance of <code>ObjectC</code>.
+How would Factory change it?</p>
+
+<pre><code class="language-javascript">function createObjectA (factory) {
+  return {
+    methodA: function () {
+      var obj = factory.create()
+      obj.methodB()
+    }
+  }
+}
+
+function createObjectB (objectC) {
+  return {
+    methodB: function () {
+      console.log('Hello, ' + objectC.message)
+    }
+  }
+}
+
+function createObjectC () {
+  return {
+    message: 'World!'
+  }
+}
+
+function createFactory (objectC) {
+  return {
+    create: function () {
+      return createObjectB(objectC)
+    }
+  }
+}
+
+var objectC = createObjectC()
+var factory = createFactory(objectC)
+var bo = createObjectA(factory)
+bo.methodA()
+</code></pre>
+
+<p><code>ObjectA</code> is still not aware of <code>ObjectC</code>!
+Not convinced yet?
+Let&rsquo;s change the game a bit.
+<code>ObjectB</code> will need some instantiation parameters.
+And it is going to create new <code>ObjectC</code>, which will need some parameters as well.
+Here is the ultimate disaster.</p>
+
+<pre><code class="language-javascript">function createObjectA (paramB1, paramB2, paramC1, paramC2) {
+  return {
+    methodA: function () {
+      var obj = createObjectB(paramB1, paramB2, paramC1, paramC2)
+      obj.methodB()
+    }
+  }
+}
+
+function createObjectB (paramB1, paramB2, paramC1, paramC2) {
+  return {
+    methodB: function () {
+      var objectC = createObjectC(paramC1, paramC2)
+      console.log(paramB1+ ' ' + paramB2 + ' ' + objectC.methodC())
+    }
+  }
+}
+
+function createObjectC (paramC1, paramC2) {
+  return {
+    methodC: function() {
+      return paramC1 + ' ' + paramC2
+    }
+  }
+}
+
+var bo = createObjectA('this', 'is', 'a', 'mess!')
+bo.methodA()
+</code></pre>
+
+<p><code>ObjectA</code> requires 4 parameters it does not need at all!
+Basically, every change you need to make on a constructor of <code>ObjectB</code> or <code>ObjectC</code> will bubble up.
+And this is how Factory solve this issue.</p>
+
+<pre><code class="language-javascript">function createObjectA (factory) {
+  return {
+    methodA: function () {
+      var obj = factory.create()
+      obj.methodB()
+    }
+  }
+}
+
+function createObjectB (paramB1, paramB2, factory) {
+  return {
+    methodB: function () {
+      var objectC = factory.create()
+      console.log(paramB1+ ' ' + paramB2 + ' ' + objectC.methodC())
+    }
+  }
+}
+
+function createObjectC (paramC1, paramC2) {
+  return {
+    methodC: function() {
+      return paramC1 + ' ' + paramC2
+    }
+  }
+}
+
+function createFactoryB (param1, param2, factory) {
+  return {
+    create: function () {
+      return createObjectB(param1, param2, factory)
+    }
+  }
+}
+
+function createFactoryC (param1, param2) {
+  return {
+    create: function () {
+      return createObjectC(param1, param2)
+    }
+  }
+}
+
+var factoryC = createFactoryC('much', 'better')
+var factoryB = createFactoryB('this', 'is', factoryC)
+var bo = createObjectA(factoryB)
+bo.methodA()
+</code></pre>
+
+<p>Now changes to the instantiation of the objects stay in the objects itself and the factories.
+It looks like a lot of code, but it could be done shorter with JavaScript (or Java 8).</p>
+
+<pre><code class="language-javascript">function createObjectA (factory) {
+  return {
+    methodA: function () {
+      var obj = factory()
+      obj.methodB()
+    }
+  }
+}
+
+function createObjectB (paramB1, paramB2, factory) {
+  return {
+    methodB: function () {
+      var objectC = factory()
+      console.log(paramB1+ ' ' + paramB2 + ' ' + objectC.methodC())
+    }
+  }
+}
+
+function createObjectC (paramC1, paramC2) {
+  return {
+    methodC: function() {
+      return paramC1 + ' ' + paramC2
+    }
+  }
+}
+
+var bo = createObjectA(function () {
+  return createObjectB('this', 'is', function () {
+    return createObjectC('even', 'better')
+  })
+})
+bo.methodA()
+</code></pre>
+
+<p>This is it!</p>
+
+<p>I hope I could convince you that Factory is very simple and handy tool that makes your code modular and well testable.
+Don&rsquo;t despair of Abstract Factories and complicated UML-Diagram.
+Just separate the instantiation of objects from your business logic in the most simple way that meets the needs!</p>
+
+                <br>
+                <p><a href="https://nsemykin.github.io/blog/">Back to posts</a></p>
+            </div>
+            <br>
+            <div class="disqus">
+                <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "nsemykin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+</body>
+</html>
+

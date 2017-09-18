@@ -6,10 +6,20 @@
     <description>Recent content on Just a whisper. I hear it in my ghost.</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Thu, 08 Jun 2017 08:05:34 +0200</lastBuildDate>
+    <lastBuildDate>Mon, 11 Sep 2017 17:01:23 +0200</lastBuildDate>
     
 	<atom:link href="https://nsemykin.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Factory is not hard</title>
+      <link>https://nsemykin.github.io/blog/factory-is-not-hard/</link>
+      <pubDate>Mon, 11 Sep 2017 17:01:23 +0200</pubDate>
+      
+      <guid>https://nsemykin.github.io/blog/factory-is-not-hard/</guid>
+      <description>I read dozens of articles, posts and tutorials about the Factory Pattern, and now i know exactly what topping belongs on chicago style pizza. However, the purpose of Factory Pattern is not baking pizzas, or producing shapes, or making sandwiches. Nor is the Factory some fancy approach to impress your peers. I&amp;rsquo;d like to tell you my understanding what Factory is about.
+ Factory Pattern is an approach to extract &amp;ldquo;new&amp;rdquo; from your code and put it somewhere else.</description>
+    </item>
     
     <item>
       <title>Let&#39;s TDD!</title>
@@ -63,7 +73,7 @@ The kind of tests i&amp;rsquo;d like to talk about are unit tests, integration t
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://nsemykin.github.io/about-this-site/</guid>
-      <description>    </description>
+      <description></description>
     </item>
     
     <item>
@@ -72,7 +82,7 @@ The kind of tests i&amp;rsquo;d like to talk about are unit tests, integration t
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://nsemykin.github.io/posts/</guid>
-      <description>    </description>
+      <description></description>
     </item>
     
     <item>
@@ -81,7 +91,7 @@ The kind of tests i&amp;rsquo;d like to talk about are unit tests, integration t
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://nsemykin.github.io/writing/</guid>
-      <description>    </description>
+      <description></description>
     </item>
     
   </channel>
