@@ -213,7 +213,7 @@ You cannot replace <code>createObjectB</code> (you can read it as <code>new Obje
 Factory makes it easy-peasy.
 Just create a Factory that will return a mock instead of actual implementation of <code>ObjectB</code>.</p>
 
-<pre><code class="language-javascript">function createObjectA () {
+<pre><code class="language-javascript">function createObjectA (factory) {
   return {
     methodA: function () {
     var obj = factory.create()
